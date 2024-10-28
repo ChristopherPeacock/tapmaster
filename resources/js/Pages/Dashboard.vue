@@ -1,30 +1,27 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+import { ref } from 'vue';
+import Navbar from '@/Components/Navbar/Navbar.vue';
+import AddPlayers from '@/Components/AddPlayer/AddPlayers.vue';
+import Footer from '@/Components/Footer/Footer.vue';
+import PlayerTableRoundOne from '@/Components/PlayerTableRoundOne/PlayerTableRoundOne.vue';
+
+
+const playerList = ref([]);
+
+const handlePlayerAdded = (playerData) => {
+    playerList.value.push({ name: playerData });
+};
+
 </script>
 
 <template>
     <Head title="Dashboard" />
-
     <AuthenticatedLayout>
-        <template #header>
-            <h2
-                class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200"
-            >
-                Dashboard
-            </h2>
-        </template>
-
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div
-                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800"
-                >
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
-                        You're logged in!
-                    </div>
-                </div>
-            </div>
-        </div>
+        <Navbar/>
+        <AddPlayers @playerAdded="handlePlayerAdded"/>
+        <PlayerTableRoundOne v-bind:players="playerList"/>
     </AuthenticatedLayout>
+    <Footer />
 </template>
