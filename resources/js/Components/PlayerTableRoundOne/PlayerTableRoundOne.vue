@@ -47,11 +47,11 @@ const playerPairs = computed(() => {
 </script>
 
 <template>
-  <div class="flex w-full flex-col border-opacity-50 mt-5 w-1/3 ml-5 ">
+  <div class="flex w-full flex-col border-opacity-50 mt-5 w-1/3 ml-5">
     <template v-for="(pair, index) in playerPairs" :key="index">
-      <div class="card bg-base-300 rounded-box grid h-20 place-items-center">{{ pair[0].name }}</div>
+      <div class="card bg-base-300 rounded-box grid h-20 place-items-center  bg-slate-800">{{ pair[0].name }}</div>
       <div class="divider divider-primary">VS</div>
-      <div class="card bg-base-300 rounded-box grid h-20 place-items-center">{{ pair[1].name }}</div>
+      <div class="card bg-base-300 rounded-box grid h-20 place-items-center  bg-slate-800">{{ pair[1].name }}</div>
       <br>
     </template>
   </div>
