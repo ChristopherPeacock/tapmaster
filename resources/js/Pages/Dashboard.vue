@@ -23,7 +23,7 @@ const buildRounds = (numRounds) => {
     return rounds;
 }
 
-const rounds = ref(buildRounds(4));
+const rounds = ref(buildRounds(3));
 
 const setRounds = () =>{
     console.log(rounds)
@@ -56,7 +56,7 @@ const addPlayerToRound = (player, round) => {
 };
 
 const getRoundStyle = (index) => {
-    const marginTopValue = index > 0 ? 175 + (index - 1) * 175 : 0; // Incrementally increase marginTop
+    const marginTopValue = index > 0 ? 175 + (index - 1) * 175 : 0; 
     const marginBottomValue = index > 0 ? 200 + (index - 1) * 250 : 0; 
 
     return {
@@ -73,7 +73,7 @@ const getRoundStyle = (index) => {
         <Navbar />
         <AddPlayers class="w-1/4" @playerAdded="addPlayerToRound($event, rounds[0])" />
         <div class="flex flex-row">
-            <div v-for="(round, index) in rounds" class="flex flex-col w-1/4 gap-3 mx-2 mb-20 ml-10" :key="round"
+            <div v-for="(round, index) in rounds" class="flex flex-col w-1/4 gap-3 mx-2 ml-10" :key="round"
             :style="getRoundStyle(index)">
                 <PlayerRound :players="round.players" @win="handleWinForRound(round, $event)"/>
                 <AddPlayers v-if="round.players.length && index != 0" @playerAdded="addPlayerToRound($event, round)" />

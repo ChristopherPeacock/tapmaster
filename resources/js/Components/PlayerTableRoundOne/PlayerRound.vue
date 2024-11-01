@@ -53,13 +53,17 @@ const emitWin = (player) => {
     emit('win', player);
 };
 
+const getDynamicMargin = () =>{
+    
+}
+
 </script>
 
 
 <template>
     <div v-for="(playerPair, index) in playersPaired" :key="index">
         <!-- Player 1 Card -->
-        <div class="card rounded-box flex flex-row mt-5 h-20 place-items-center bg-slate-800"> <!-- Increased height -->
+        <div class="card rounded-box flex flex-row mt-5 mb-50 h-20 place-items-center bg-slate-800"> <!-- Increased height -->
             <div class="avatar ml-2">
                 <div class="w-14 rounded-xl"> <!-- Increased avatar size for consistency -->
                     <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
@@ -84,7 +88,7 @@ const emitWin = (player) => {
         </div>
 
         <!-- Player 2 Card -->
-        <div class="card rounded-box flex flex-row h-20 place-items-center bg-slate-800"> <!-- Increased height -->
+        <div class="card rounded-box flex flex-row h-20 mb-20 place-items-center bg-slate-800"> <!-- Increased height -->
             <div class="avatar ml-2">
                 <div class="w-14 rounded-xl"> <!-- Made size consistent with Player 1 -->
                     <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
@@ -93,7 +97,7 @@ const emitWin = (player) => {
             <div class="ml-10 ">
                 {{ playerPair[1].name || 'Waiting result' }}
             </div>
-            <div class="ml-auto dropdown dropdown-hover flex">
+            <div class="ml-auto dropdown dropdown-hover flex ">
                 <div tabindex="0" role="button" class="btn mr-5 m-1">Decision</div>
                 <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
                     <li @click="addWin(playerPair[1])"><a>win</a></li>
