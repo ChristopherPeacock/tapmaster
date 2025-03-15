@@ -1,11 +1,17 @@
 <script setup>
 import { computed, defineProps, ref, defineEmits } from 'vue';
 
-const { players } = defineProps({
+const { players, winners } = defineProps({
     players: {
         required: true,
         type: Array
+    },
+
+    winners:{
+        required: true,
+        type: Array
     }
+
 });
 
 const emit = defineEmits(['win']);
@@ -32,6 +38,7 @@ const addWin = (player) => {
         won.value.push(player);
         emitWin(player);
     }
+
 };
 
 const addLose = (player) => {
@@ -53,8 +60,11 @@ const emitWin = (player) => {
     emit('win', player);
 };
 
-const getDynamicMargin = () =>{
-    
+const handleWinnerStyling = (player) => {
+  // i get a true and false so this should trigger it to be green
+  const result = console.log(winners.includes(player) ? 'bg-green-800' : '')
+  winners.includes(player) ? 'bg-green-800' : ''
+  
 }
 
 </script>
@@ -62,10 +72,9 @@ const getDynamicMargin = () =>{
 
 <template>
     <div v-for="(playerPair, index) in playersPaired" :key="index">
-        <!-- Player 1 Card -->
-        <div class="card rounded-box flex flex-row mt-5 mb-50 h-20 place-items-center bg-slate-800"> <!-- Increased height -->
+        <div :class="handleWinnerStyling(playerPair[0])" class="card rounded-box flex flex-row mt-5 mb-50 h-20 place-items-center bg-slate-800" > 
             <div class="avatar ml-2">
-                <div class="w-14 rounded-xl"> <!-- Increased avatar size for consistency -->
+                <div class="w-14 rounded-xl"> 
                     <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
                 </div>
             </div>
@@ -88,7 +97,7 @@ const getDynamicMargin = () =>{
         </div>
 
         <!-- Player 2 Card -->
-        <div class="card rounded-box flex flex-row h-20 mb-20 place-items-center bg-slate-800"> <!-- Increased height -->
+        <div :class="handleWinnerStyling(playerPair[1])" class="card rounded-box flex flex-row h-20 mb-20 place-items-center bg-slate-800"> <!-- Increased height -->
             <div class="avatar ml-2">
                 <div class="w-14 rounded-xl"> <!-- Made size consistent with Player 1 -->
                     <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
