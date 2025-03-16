@@ -19,7 +19,7 @@ Route::get('/desktop_lamp_on', function () {
     try {
         $response = Http::withHeaders([
             'Content-Type' => 'text/plain',
-        ])->post($picoIp, 'on');
+        ])->withBody('on', 'text/plain')->post($picoIp);
 
         if ($response->successful()) {
             return response()->json([
@@ -43,7 +43,32 @@ Route::get('/desktop_lamp_on', function () {
 });
 
 Route::get('/desktop_lamp_off', function () {
-    return response()->json(['message' => 'Turning off Desktop lamp command was successfully read by the server']); 
+    $picoIp = 'http://192.168.1.244:8080';
+
+    try {
+        $response = Http::withHeaders([
+            'Content-Type' => 'text/plain',
+        ])->withBody('off', 'text/plain')->post($picoIp);
+
+        if ($response->successful()) {
+            return response()->json([
+                'message' => 'Turning on Desktop lamp command was successfully sent to the Pico.',
+                'status' => 'success',
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Failed to send command to Pico.',
+                'status' => 'error',
+            ], 500);
+        }
+    } catch (\Exception $e) {
+        Log::error("Pico W Communication Error: " . $e->getMessage());
+
+        return response()->json([
+            'message' => 'Error connecting to the Pico.',
+            'status' => 'error',
+        ], 500);
+    } 
 });
 
 
