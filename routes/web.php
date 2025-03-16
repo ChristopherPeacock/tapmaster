@@ -1,17 +1,50 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+
+use Illuminate\Support\Facades\Log;
 
 Route::get('/', function () {
     return response()->json([
-        'message' => 'Home',
+        'message' => 'Connection established from server ',
         'status' => 'success',
     ]);
 });
 
+Route::get('/desktop_lamp_on', function () {
+    $picoIp = 'http://192.168.1.244:8080';
+
+    try {
+        $response = Http::withHeaders([
+            'Content-Type' => 'text/plain',
+        ])->post($picoIp, 'on');
+
+        if ($response->successful()) {
+            return response()->json([
+                'message' => 'Turning on Desktop lamp command was successfully sent to the Pico.',
+                'status' => 'success',
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Failed to send command to Pico.',
+                'status' => 'error',
+            ], 500);
+        }
+    } catch (\Exception $e) {
+        Log::error("Pico W Communication Error: " . $e->getMessage());
+
+        return response()->json([
+            'message' => 'Error connecting to the Pico.',
+            'status' => 'error',
+        ], 500);
+    }
+});
+
+Route::get('/desktop_lamp_off', function () {
+    return response()->json(['message' => 'Turning off Desktop lamp command was successfully read by the server']); 
+});
 
 
 Route::middleware('auth')->group(function () {
