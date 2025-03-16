@@ -5,6 +5,31 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+
+Route::get('/bambu_a1_status', function () {
+    $scriptPath = base_path('python-scripts/bambuLabs.py');
+    
+    if (!file_exists($scriptPath)) {
+        return response()->json(['error' => 'Script not found'], 404);
+    }
+
+    $process = new Process(['C:\Users\Robyn Peacock\AppData\Local\Programs\Python\Python313\python.exe', $scriptPath]);
+    $process->run();
+    
+    if (!$process->isSuccessful()) {
+        return response()->json([
+            'error' => 'Process failed',
+            'output' => $process->getErrorOutput()
+        ], 500);
+    }
+    
+    $output = trim($process->getOutput());
+    
+    // Debug the raw output
+    return response($output, 200, ['Content-Type' => 'text/plain']);
+});
 
 Route::get('/', function () {
     return response()->json([
