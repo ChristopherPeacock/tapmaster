@@ -7,6 +7,33 @@ use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
+Route::get('/Connect_to_magic_mirror', function () {
+    $response = 'Calling on the magic mirror';
+
+    try {
+        $httpResponse = Http::post('http://192.168.1.218:8080', [
+            'message' => 'Hello, Magic Mirror!',
+        ]);
+
+        if ($httpResponse->successful()) {
+            return response()->json([
+                'message' => 'Success',
+                'data' => $httpResponse->json(),
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Failed to connect to Magic Mirror',
+                'status' => 'error',
+            ], 500);
+        }
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Error occurred while connecting to Magic Mirror',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+});
+
 Route::get('/bambu_a1_status', function () {
     $scriptPath = base_path('python-scripts/bambuLabs.py');
     
