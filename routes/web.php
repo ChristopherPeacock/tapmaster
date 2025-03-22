@@ -7,54 +7,25 @@ use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-Route::get('/Connect_to_magic_mirror', function () {
-    $response = 'Calling on the magic mirror';
+Route::get('/print', function () {
+    $response = 'Calling bambu labs to print file';
 
-    try {
-        $httpResponse = Http::post('http://192.168.1.218:8080', [
-            'message' => 'Hello, Magic Mirror!',
-        ]);
+    $scriptPath = base_path('javascript-scripts/QRCodePrint.js');
 
-        if ($httpResponse->successful()) {
-            return response()->json([
-                'message' => 'Success',
-                'data' => $httpResponse->json(),
-            ]);
-        } else {
-            return response()->json([
-                'message' => 'Failed to connect to Magic Mirror',
-                'status' => 'error',
-            ], 500);
-        }
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Error occurred while connecting to Magic Mirror',
-            'error' => $e->getMessage(),
-        ], 500);
-    }
-});
-
-Route::get('/bambu_a1_status', function () {
-    $scriptPath = base_path('python-scripts/bambuLabs.py');
-    
-    if (!file_exists($scriptPath)) {
+    if(!file_exists($scriptPath)) {
         return response()->json(['error' => 'Script not found'], 404);
     }
 
-    $process = new Process(['C:\Users\Robyn Peacock\AppData\Local\Programs\Python\Python313\python.exe', $scriptPath]);
+    $process = new Process(['C:\Program Files\nodejs\node.exe', $scriptPath]);
     $process->run();
-    
+
     if (!$process->isSuccessful()) {
         return response()->json([
             'error' => 'Process failed',
             'output' => $process->getErrorOutput()
         ], 500);
     }
-    
-    $output = trim($process->getOutput());
-    
-    // Debug the raw output
-    return response($output, 200, ['Content-Type' => 'text/plain']);
+
 });
 
 Route::get('/', function () {
@@ -122,11 +93,12 @@ Route::get('/desktop_lamp_off', function () {
     } 
 });
 
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
 
 require __DIR__.'/auth.php';
