@@ -20,6 +20,7 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "@mendable/firecrawl-js": "^1.21.0",
         "jimp": "^1.6.0",
         "robotjs": "^0.6.0",
         "sharp": "^0.33.5",
