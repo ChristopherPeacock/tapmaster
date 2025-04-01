@@ -1,22 +1,18 @@
 <?php
+
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
-
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-
-use Illuminate\Support\Env;
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::get('/Gemini2.0', function () {
-    $apiKey = env('GEMINI'); // Ensure you have this key in your .env file
+Route::get('/gemini2.0', function () {
+    $apiKey = env('GEMINI');
     $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $apiKey;
-
     $payload = [
         "contents" => [
             [
@@ -26,26 +22,39 @@ Route::get('/Gemini2.0', function () {
             ]
         ]
     ];
-
-    try {
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-        ])->post($url, $payload);
-
-        if ($response->successful()) {
-            return response()->json($response->json());
-        } else {
-            return response()->json([
-                'error' => 'Failed to fetch data from Gemini API',
-                'details' => $response->body(),
-            ], $response->status());
+    $maxRetries = 3;
+    $retryDelay = 1; // Initial delay in seconds
+    for ($attempt = 0; $attempt < $maxRetries; $attempt++) {
+        try {
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post($url, $payload);
+            if ($response->successful()) {
+                return response()->json($response->json());
+            } elseif ($response->status() !== 503) {
+                return response()->json([
+                    'error' => 'Failed to fetch data from Gemini API',
+                    'details' => $response->body(),
+                ], $response->status());
+            }
+            // 503 error, retry after delay
+            sleep($retryDelay);
+            $retryDelay *= 2; // Exponential backoff
+        } catch (\Exception $e) {
+            // Handle other exceptions
+            if($attempt == ($maxRetries -1)){
+                return response()->json([
+                    'error' => 'An error occurred while communicating with the Gemini API',
+                    'details' => $e->getMessage(),
+                ], 500);
+            }
+            sleep($retryDelay);
+            $retryDelay *= 2;
         }
-    } catch (\Exception $e) {
-        return response()->json([
-            'error' => 'An error occurred while communicating with the Gemini API',
-            'details' => $e->getMessage(),
-        ], 500);
     }
+    return response()->json([
+        'error' => 'Gemini API unavailable after multiple retries',
+    ], 503);
 });
 
 Route::get('/print', function () {
