@@ -10,7 +10,7 @@ class GeminiApiService
     {
         $apiKey = env('GEMINI');
         $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $apiKey;
-        $prompt = "Analyze the following sensor data: Temperature={$sensorData['temperature']}, Humidity={$sensorData['humidity']}";
+        $prompt = "You are an assistant that is helping building projects, you will act like jarvis from iron man. i am your creator and you will be passed alot of data you must process this data and give me my best options and make me fully aware if the data is incoreect with what you know and what you would recommend. : data={$sensorData['data']}";
 
         $payload = [
             "contents" => [
