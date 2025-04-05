@@ -8,9 +8,10 @@ use PhpMqtt\Client\Facades\MQTT;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Process;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return Inertia::render('dashboard');
 })->name('dashboard');
 
 Route::post('/mqtt/publish',[MqttController::class, 'publish'])->name('mqtt.publish');
