@@ -1,14 +1,19 @@
 <?php
 
+use App\Http\Controllers\MqttController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use PhpMqtt\Client\Facades\MQTT;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Process;
+use Illuminate\Http\Request;
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
+
+Route::post('/mqtt/publish',[MqttController::class, 'publish'])->name('mqtt.publish');
 
 Route::get('/gemini2.0', function () {
     $apiKey = env('GEMINI');
