@@ -63,90 +63,11 @@ Route::get('/gemini2.0', function () {
     ], 503);
 });
 
-Route::get('/print', function () {
-    $response = 'Calling bambu labs to print file';
-
-    $scriptPath = base_path('javascript-scripts/QRCodePrint.js');
-
-    if(!file_exists($scriptPath)) {
-        return response()->json(['error' => 'Script not found'], 404);
-    }
-
-    $process = new Process(['C:\Program Files\nodejs\node.exe', $scriptPath]);
-    $process->run();
-
-    if (!$process->isSuccessful()) {
-        return response()->json([
-            'error' => 'Process failed',
-            'output' => $process->getErrorOutput()
-        ], 500);
-    }
-
-});
-
 Route::get('/', function () {
     return response()->json([
         'message' => 'Connection established from server ',
         'status' => 'success',
     ]);
-});
-
-Route::get('/desktop_lamp_on', function () {
-    $picoIp = 'http://192.168.1.244:8080/on';
-
-    try {
-        $response = Http::withHeaders([
-            'Content-Type' => 'text/plain',
-        ])->withBody('on', 'text/plain')->post($picoIp);
-
-        if ($response->successful()) {
-            return response()->json([
-                'message' => 'Turning on Desktop lamp command was successfully sent to the device.',
-                'status' => 'success',
-            ]);
-        } else {
-            return response()->json([
-                'message' => 'Failed to send command to the device.',
-                'status' => 'error',
-            ], 500);
-        }
-    } catch (\Exception $e) {
-        Log::error("Device Communication Error: " . $e->getMessage());
-
-        return response()->json([
-            'message' => 'Error connecting to the device.',
-            'status' => 'error',
-        ], 500);
-    }
-});
-
-Route::get('/desktop_lamp_off', function () {
-    $picoIp = 'http://192.168.1.244:8080/off';
-
-    try {
-        $response = Http::withHeaders([
-            'Content-Type' => 'text/plain',
-        ])->withBody('off', 'text/plain')->post($picoIp);
-
-        if ($response->successful()) {
-            return response()->json([
-                'message' => 'Turning on Desktop lamp command was successfully sent to the Pico.',
-                'status' => 'success',
-            ]);
-        } else {
-            return response()->json([
-                'message' => 'Failed to send command to Pico.',
-                'status' => 'error',
-            ], 500);
-        }
-    } catch (\Exception $e) {
-        Log::error("Pico W Communication Error: " . $e->getMessage());
-
-        return response()->json([
-            'message' => 'Error connecting to the Pico.',
-            'status' => 'error',
-        ], 500);
-    } 
 });
 
 Route::middleware('auth')->group(function () {
