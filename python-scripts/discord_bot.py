@@ -16,10 +16,15 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 @bot.event
 async def on_ready():
     print(f'✅ Logged in as {bot.user} (ID: {bot.user.id})')
+    
 
 @bot.command()
 async def ping(ctx):
     await ctx.send('Pong! 🏓')
+    
+@bot.command()
+async def hello(ctx):
+    await ctx.send('Hello! 👋')
 
 # Get the Discord token from the environment variables
 discord_token = os.getenv('DISCORD_TOKEN')
