@@ -17,7 +17,6 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 async def on_ready():
     print(f'✅ Logged in as {bot.user} (ID: {bot.user.id})')
     
-
 @bot.command()
 async def ping(ctx):
     await ctx.send('Pong! 🏓')
