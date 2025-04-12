@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 Route::get('/dashboard', function () {
-    return Inertia::render('dashboard');
+    return view('dash');
 })->name('dashboard');
 
 Route::post('/mqtt/publish',[MqttController::class, 'publish'])->name('mqtt.publish');
@@ -92,7 +92,7 @@ Route::get('/', function () {
 });
 
 Route::get('/desktop_lamp_on', function () {
-    $picoIp = 'http://192.168.1.244:8080';
+    $picoIp = 'http://192.168.1.244:8080/on';
 
     try {
         $response = Http::withHeaders([
@@ -101,27 +101,27 @@ Route::get('/desktop_lamp_on', function () {
 
         if ($response->successful()) {
             return response()->json([
-                'message' => 'Turning on Desktop lamp command was successfully sent to the Pico.',
+                'message' => 'Turning on Desktop lamp command was successfully sent to the device.',
                 'status' => 'success',
             ]);
         } else {
             return response()->json([
-                'message' => 'Failed to send command to Pico.',
+                'message' => 'Failed to send command to the device.',
                 'status' => 'error',
             ], 500);
         }
     } catch (\Exception $e) {
-        Log::error("Pico W Communication Error: " . $e->getMessage());
+        Log::error("Device Communication Error: " . $e->getMessage());
 
         return response()->json([
-            'message' => 'Error connecting to the Pico.',
+            'message' => 'Error connecting to the device.',
             'status' => 'error',
         ], 500);
     }
 });
 
 Route::get('/desktop_lamp_off', function () {
-    $picoIp = 'http://192.168.1.244:8080';
+    $picoIp = 'http://192.168.1.244:8080/off';
 
     try {
         $response = Http::withHeaders([

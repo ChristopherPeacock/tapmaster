@@ -20,3 +20,5 @@ yarn-error.log
 /.idea
 /.vscode
 /.zed
+python-scripts/__pycache__/discord.cpython-313.pyc
+.gitignore

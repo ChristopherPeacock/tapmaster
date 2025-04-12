@@ -1,12 +1,11 @@
 <script setup>
-import NavBar2 from '@/Components/NavBar2/navbar.vue';
-import ObjectDetection from '@/Components/ObjectDetetction/objectdetection.vue';
+
 
 </script>
 
 <template>
-    <div class="bg-slate-800 h">
-        <NavBar2/>
-        <ObjectDetection/>
-    </div>
+  <div class="container mx-auto mt-5">
+    <h1 class="text-3xl font-bold text-red-500">Dashboard</h1>
+    this is the dash
+  </div>
 </template>
